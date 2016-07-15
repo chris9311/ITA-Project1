@@ -1,5 +1,5 @@
 package com.ita.dao;
 
-public class test {
+public class PersonDao {
 
 }
