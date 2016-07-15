@@ -1,6 +1,8 @@
 package com.ita.model;
 
-public class Department {
+import java.io.Serializable;
+
+public class Department implements Serializable {
 	
 	private int dId;
 	private String dName;

@@ -1,8 +1,9 @@
 package com.ita.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Person {
+public class Person implements Serializable{
 	
 	private int pId;
 	private String pName;

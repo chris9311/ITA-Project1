@@ -153,16 +153,17 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		return d;
 	}
 	
-	public static void main(String[] args) {
-		//DepartmentDao departmentDao=new DepartmentDaoImpl();
-		Department department=null;
-		String[] strings={"Finance","HumanResources","Marketing","Production",
-				"Information","Securities","Technology","Administrative","NetSales",
-				" GeneralManagemen","Compliance","Design","Logistics","Test"};
-		String[] strings2={"Hongkong","ZhuHai","ShangHai","Manila"," SiliconValley"};
-		for(int i=0;i<strings.length;i++){
-			department=new Department(strings[i], strings2[(int)(Math.random()*strings2.length)]);
-			System.out.println();
-		}
-	}
+//	public static void main(String[] args) {
+//		DepartmentDao departmentDao=new DepartmentDaoImpl();
+//		Department department=null;
+//		String[] strings={"Finance","HumanResources","Marketing","Production",
+//				"Information","Securities","Technology","Administrative","NetSales",
+//				" GeneralManagemen","Compliance","Design","Logistics","Test"};
+//		String[] strings2={"Hongkong","ZhuHai","ShangHai","Manila","SiliconValley"};
+//		for(int i=0;i<strings.length;i++){
+//			department=new Department(strings[i], strings2[(int)(Math.random()*strings2.length)]);
+//				System.out.println(department);
+//			departmentDao.addDepartment(department);
+//		}
+//	}
 }

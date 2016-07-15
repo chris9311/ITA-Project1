@@ -168,4 +168,39 @@ public class PersonDaoImpl implements PersonDao {
 		return p;
 	}
 
+	@Override
+	public List<Person> showAllPersonOfADepartment(int did) {
+		List<Person> ps = new ArrayList<Person>();
+
+		String sql = "select * from person left join depart on person.did = depart.did ";
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		con = DbUtil.connect();
+		try {
+			pst = con.prepareStatement(sql);
+			rs = pst.executeQuery();
+			Person p=null;
+			while (rs.next()) {
+				if(rs.getInt("did")==did){					
+					int pId = rs.getInt("pid");
+					String pName = rs.getString("pname");
+					Date date=rs.getDate("birthday");
+					String tel=rs.getString("tel");
+					int dId=rs.getInt("did");
+					int salary=rs.getInt("salary");
+					p=new Person(pName, date, tel, dId, salary);
+					p.setpId(pId);
+					ps.add(p);
+				}
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			DbUtil.free(con, pst, null);
+		}
+		return ps;
+	}
+
 }

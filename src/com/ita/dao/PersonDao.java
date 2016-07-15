@@ -11,5 +11,6 @@ public interface PersonDao {
 	public int updatePerson(Person p);
 	public List<Person> showAllPerson();
 	public Person loadPerson(int id);
+	public List<Person> showAllPersonOfADepartment(int did);
 	
 }
