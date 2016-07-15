@@ -14,9 +14,8 @@ public class Person {
 	public Person() {
 		super();
 	}
-	public Person(int pId, String pName, Date birthday, String tel, int dId, int salary) {
+	public Person(String pName, Date birthday, String tel, int dId, int salary) {
 		super();
-		this.pId = pId;
 		this.pName = pName;
 		this.birthday = birthday;
 		this.tel = tel;

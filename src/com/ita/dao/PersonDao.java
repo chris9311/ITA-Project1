@@ -1,5 +1,15 @@
 package com.ita.dao;
 
-public class PersonDao {
+import java.util.List;
 
+import com.ita.model.Person;
+
+public interface PersonDao {
+	
+	public int addPerson(Person p);
+	public int deletePerson(int id);
+	public int updatePerson(Person p);
+	public List<Person> showAllPerson();
+	public Person loadPerson(int id);
+	
 }
