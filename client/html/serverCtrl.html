@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script>
+	$.ajax({
+		
+	})
+</script>
 <meta charset="utf-8">
 <title>{{title}}</title>
 </head>
@@ -14,14 +18,13 @@
 </div>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand" href="javascript:void(0);">Navigation</a>
     </div>
      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="javascript:void(0);">Index <span class="sr-only">(current)</span></a></li>
-        <li><a href="/server">Server Controller</a></li>
+        <li><a href="/">Index</a></li>
+        <li class="active"><a href="javascript:void(0);">Server Controller<span class="sr-only">(current)</span></a></li>
       </ul>
      </div>
     
@@ -29,6 +32,7 @@
 </nav>
 <h1>Welcome!</h1>
 <h2>{{value}}</h2>
+<a class="btn btn-default" href="/server/changeStatus">{{serverStatus}} Server</a>
 </div>
 </body>
 </html>

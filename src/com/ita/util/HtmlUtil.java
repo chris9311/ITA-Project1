@@ -28,14 +28,12 @@ public class HtmlUtil {
 //			outputStream.write("\r\n".getBytes());
 //			outputStream.write(readHtmlFile(fileName, elements).getBytes());
 //		} catch (IOException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}finally{
 //			try {
 //				outputStream.close();
 //				inputStream.close();
 //			} catch (IOException e) {
-//				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
 //		}
@@ -43,7 +41,6 @@ public class HtmlUtil {
 	
 	public static String readHtmlFile(String fileName, Map<String, String> elements) throws IOException{
 		
-//		InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(filePath + FileName));
 		if(! fileName.matches(".html | .htm")) 
 			fileName = fileName + ".html"; 
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath + fileName));
@@ -65,7 +62,7 @@ public class HtmlUtil {
 		while (matcher.find()) {
 			ReturnHtml = ReturnHtml.replace(matcher.group(1), elements.get(matcher.group(2)));
 		}
-		System.out.println(ReturnHtml);
+//		System.out.println(ReturnHtml);
 		return ReturnHtml;
 	}
 }

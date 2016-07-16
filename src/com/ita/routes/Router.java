@@ -1,8 +1,9 @@
 package com.ita.routes;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -10,6 +11,8 @@ import java.net.Socket;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Router {
@@ -23,32 +26,35 @@ public class Router {
 		this.routeMap = new HashMap<String, String>();
 	}
 
-	public void addRoute(String route, String controllerName){
-		this.routeMap.put(route, controllerName);
+	public void addRoute(){
+		Properties list = new Properties();
+		try {
+			list.load(new FileInputStream("./router.properties"));
+		} catch (FileNotFoundException e) {
+			System.out.println("error : configuration file not fonud");
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Set<String> urlList = list.stringPropertyNames();
+		for (String url : urlList) {
+			String controller = list.getProperty(url);			
+			this.routeMap.put(url, controller);
+		}
 	}
 	
 	public void analyzeRequest() throws Exception{
 		OutputStream outputStream = null;
-//		InputStream inputStream = null;
 		BufferedReader bufferedReader = null;
 		outputStream = this.socket.getOutputStream();
-//		inputStream = this.socket.getInputStream();
 		InputStreamReader inputStreamReader = new InputStreamReader(this.socket.getInputStream());
-		
 		bufferedReader = new BufferedReader(inputStreamReader);
-//		int m = 0;
-//		int i = 0;
-//		byte[] bs = new byte[100];		
-//		while ((m = inputStream.read(bs)) != -1) {
-//			System.out.println(new String(bs) + " --------------" + i++);
-//		}
-		
 		String line = null;
 		line = bufferedReader.readLine();
 		if(line != null){			
 			String resource=line.substring(line.indexOf('/'),line.lastIndexOf('/')-5);
 			resource=URLDecoder.decode(resource, "UTF-8");
-			System.out.println("resource : " + resource);
+//			System.out.println("resource : " + resource);
 			Map<String, String> params = new HashMap<String, String>();
 			String url = resource;
 			if(resource.contains("?")){
@@ -62,17 +68,17 @@ public class Router {
 				}
 			}
 			String method = new StringTokenizer(line).nextElement().toString();
-			System.out.println("method : " + method);
+//			System.out.println("method : " + method);
 			Request request;
 			Response response;
 			while ((line = bufferedReader.readLine()) != null) {
-				System.out.println(line);
+//				System.out.println(line);
 				if(line.equals("")) break;
 			}
 //			if("POST".equalsIgnoreCase(method)) {
 //				System.out.println(bufferedReader.readLine());
 //			}
-			
+//			bufferedReader.close();
 			request = new Request(method, params);
 			response = new Response(outputStream);
 			routeForwarding(url,request, response);
@@ -83,15 +89,15 @@ public class Router {
 		Class<?> cClass = null;
 		String className = "Index";
 		String methodName = "index";
-		String cm = this.routeMap.get(url);
-		if(!url.equals("/") && this.routeMap.get(url).contains(".")){
-			methodName = this.routeMap.get(url).split("\\.")[1];
-			className = this.routeMap.get(url).split("\\.")[0];
+		if(!url.equals("/") && !url.equals("/favicon.ico")){
+			String cm = this.routeMap.get(url);
+			if(cm.contains(".")){				
+				methodName = cm.split("\\.")[1];
+				className = cm.split("\\.")[0];
+			}
 		}
 		cClass = Class.forName("com.ita.controllers." + className + "Controller");
-//		Object object = cClass.newInstance();
 		Method method = cClass.getMethod(methodName, Request.class, Response.class);
-//		method.setAccessible(true);
 		method.invoke(cClass.newInstance(), request, response);
 	};
 }

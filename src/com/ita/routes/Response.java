@@ -44,8 +44,22 @@ public class Response {
 		this.attribute.put(key, value);
 	}
 
-	public void send(String fileName) throws IOException{
-		this.outputStream.write(HtmlUtil.readHtmlFile(fileName, this.attribute).getBytes());
+	public void sendHtml(String fileName){
+		try {
+			this.outputStream.write(HtmlUtil.readHtmlFile(fileName, this.attribute).getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				this.outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+		}
+	}
+	
+	public void sendJson() {
+		
 	}
 
 }
