@@ -130,7 +130,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	@Override
 	public Department loadDepartment(int id) {
 		Department d=null;
-		String sql = "select * from customer where id=?";
+		String sql = "select * from depart where did=?";
 		Connection con = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;

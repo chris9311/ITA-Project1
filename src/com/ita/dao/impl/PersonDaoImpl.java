@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ita.dao.PersonDao;
+import com.ita.model.Department;
 import com.ita.model.Person;
 import com.ita.util.DbUtil;
 
@@ -201,6 +204,44 @@ public class PersonDaoImpl implements PersonDao {
 			DbUtil.free(con, pst, null);
 		}
 		return ps;
+	}
+
+	@Override
+	public Map<Person, Department> showPersonAndHisDepartment() {
+		Map<Person,Department> map = new HashMap<Person,Department>();
+
+		String sql = "select * from person left join depart on person.did = depart.did ";
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		con = DbUtil.connect();
+		try {
+			pst = con.prepareStatement(sql);
+			rs = pst.executeQuery();
+			Person p=null;
+			Department d=null;
+			while (rs.next()) {					
+					int pId = rs.getInt("pid");
+					String pName = rs.getString("pname");
+					Date date=rs.getDate("birthday");
+					String tel=rs.getString("tel");
+					int dId=rs.getInt("did");
+					int salary=rs.getInt("salary");
+					p=new Person(pName, date, tel, dId, salary);
+					p.setpId(pId);
+					String dName=rs.getString("dName");
+					String city=rs.getString("city");
+					d=new Department(dName, city);
+					d.setdId(dId);
+					map.put(p, d);
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			DbUtil.free(con, pst, null);
+		}
+		return map;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.ita.server;
 
-import java.awt.event.MouseWheelEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.ita.dao.DepartmentDao;
 import com.ita.dao.PersonDao;
@@ -64,7 +64,7 @@ public class OracleDaoServer extends Server {
 					loadDepartmentAll(objectOutputStream,outputStream,objectInputStream);
 				}else if ("L-PD".equals(commands[0])) {   //查询一个department所有person的所有属性
 					loadAllPersonOfADepartment(objectOutputStream,outputStream,objectInputStream,commands[1]);
-				}else if ("Quit".equals(commands[0])) {   //退出
+				}else if ("Q".equals(commands[0])) {   //退出
 					break;
 				}
 			}
@@ -76,6 +76,7 @@ public class OracleDaoServer extends Server {
 				outputStream.close();
 				inputStream.close();
 				reader.close();
+				socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -104,17 +105,13 @@ public class OracleDaoServer extends Server {
 		try {
 			System.out.println("******************** loadPersonAll Start ********************");
 			PersonDao personDao=new PersonDaoImpl();
-			DepartmentDao departmentDao=new DepartmentDaoImpl();
-			List<Person> list=personDao.showAllPerson();
-			int size=list.size();
+			Map<Person, Department> map=personDao.showPersonAndHisDepartment();
+			int size=map.size();
 			outputStream.write((String.valueOf(size)+"\n").getBytes());
-			Department department;
-			for (Iterator<Person> iterator = list.iterator(); iterator.hasNext();) {
-				Person person=(Person)iterator.next();
-				department=departmentDao.loadDepartment(person.getdId());
-				
+			Set<Person> persons=map.keySet();
+			for (Person person : persons) {
 				objectOutputStream.writeObject(person);
-				objectOutputStream.writeObject(department);
+				objectOutputStream.writeObject(map.get(person));
 			}
 			System.out.println("发送所有person结束....");
 		} catch (IOException e) {
