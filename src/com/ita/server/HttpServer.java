@@ -50,7 +50,7 @@ public class HttpServer extends Server {
 //	HtmlUtil.response(socket, "index", map);
 	
 	Router router = new Router(socket);
-	router.addRoute("/server", "changServerStatus");
+	router.addRoute("/server", "Server.startServer");
 	try {
 		router.analyzeRequest();
 	} catch (Exception e) {

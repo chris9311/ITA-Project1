@@ -5,16 +5,16 @@ import java.io.IOException;
 import com.ita.routes.Request;
 import com.ita.routes.Response;
 
-public class IndexController {
-	
-	public IndexController() {
+public class ServerController {
+
+	public ServerController() {
 		// TODO Auto-generated constructor stub
 	}
-
-	public void index(Request request, Response response){
+	
+	public void startServer(Request request, Response response) {
+		response.setAttribute("title", "this is server Controller");
+		response.setAttribute("value", "this is Server Controller value");
 		try {
-			response.setAttribute("title", "this is title");
-			response.setAttribute("value", "this is value");
 			response.send("index");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
