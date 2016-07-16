@@ -38,11 +38,14 @@ public class OracleDaoServer extends Server {
 		InputStream inputStream = null;
 		BufferedReader reader = null;
 		try {
+			
 			outputStream = socket.getOutputStream();
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+			
 			inputStream = socket.getInputStream();
 			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 			reader = new BufferedReader(new InputStreamReader(inputStream));
+			
 			while(true){
 				String command=reader.readLine();
 				String[] commands=command.split(" ");
@@ -93,7 +96,6 @@ public class OracleDaoServer extends Server {
 			outputStream.write((String.valueOf(size)+"\n").getBytes());
 			for (Iterator<Department> iterator = list.iterator(); iterator.hasNext();) {
 				Department department = (Department) iterator.next();
-				
 				objectOutputStream.writeObject(department);
 			}
 			System.out.println("发送所有department结束.....");
@@ -108,6 +110,7 @@ public class OracleDaoServer extends Server {
 			Map<Person, Department> map=personDao.showPersonAndHisDepartment();
 			int size=map.size();
 			outputStream.write((String.valueOf(size)+"\n").getBytes());
+			System.out.println(size);
 			Set<Person> persons=map.keySet();
 			for (Person person : persons) {
 				objectOutputStream.writeObject(person);
