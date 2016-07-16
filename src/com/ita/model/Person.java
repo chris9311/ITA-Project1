@@ -59,10 +59,10 @@ public class Person implements Serializable{
 	public void setSalary(int salary) {
 		this.salary = salary;
 	}
-//	@Override
-//	public String toString() {
-//		
-//		return "["+this.getpId()+","+this.getpName()+","+this.getBirthday().toString()+","+this.getTel()+
-//				","+this.getdId()+","+this.getSalary()+"]";
-//	}
+	@Override
+	public String toString() {
+		
+		return "["+this.getpId()+","+this.getpName()+","+this.getBirthday().toString()+","+this.getTel()+
+				","+this.getdId()+","+this.getSalary()+"]";
+	}
 }

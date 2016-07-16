@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -36,13 +37,13 @@ public class OracleDaoServer extends Server {
 		OutputStream outputStream = null;
 		InputStream inputStream = null;
 		BufferedReader reader = null;
-//		ObjectOutputStream objectOutputStream=null;
 		try {
 			outputStream = socket.getOutputStream();
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 			inputStream = socket.getInputStream();
+			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 			reader = new BufferedReader(new InputStreamReader(inputStream));
 			while(true){
-//				objectOutputStream = new ObjectOutputStream(outputStream);
 				String command=reader.readLine();
 				String[] commands=command.split(" ");
 				if("A-P".equals(commands[0])){          //新增person
@@ -58,11 +59,11 @@ public class OracleDaoServer extends Server {
 				}else if ("D-D".equals(commands[0])) {   //删除department以及其内的person
 					removeDepartment(commands[1]);
 				}else if ("L-PA".equals(commands[0])) {   //查询所有person的信息，除了departmentID
-					loadPersonAll(outputStream);
+					loadPersonAll(objectOutputStream,outputStream,objectInputStream);
 				}else if ("L-DA".equals(commands[0])) {   //查询所有department
-					loadDepartmentAll(outputStream);
+					loadDepartmentAll(objectOutputStream,outputStream,objectInputStream);
 				}else if ("L-PD".equals(commands[0])) {   //查询一个department所有person的所有属性
-					loadAllPersonOfADepartment(outputStream, commands[1]);
+					loadAllPersonOfADepartment(objectOutputStream,outputStream,objectInputStream,commands[1]);
 				}else if ("Quit".equals(commands[0])) {   //退出
 					break;
 				}
@@ -82,12 +83,50 @@ public class OracleDaoServer extends Server {
 				
 	}
 	
-	private void loadAllPersonOfADepartment(OutputStream outputStream, String value) {
+	private void loadDepartmentAll(ObjectOutputStream objectOutputStream,OutputStream outputStream, ObjectInputStream objectInputStream) {
+		try {
+			System.out.println("******************** LoadDepartmentAll Start ********************");
+			DepartmentDao departmentDao=new DepartmentDaoImpl();
+			List<Department> list=departmentDao.showAllDepartment();
+			int size=list.size();
+			outputStream.write((String.valueOf(size)+"\n").getBytes());
+			for (Iterator<Department> iterator = list.iterator(); iterator.hasNext();) {
+				Department department = (Department) iterator.next();
+				
+				objectOutputStream.writeObject(department);
+			}
+			System.out.println("发送所有department结束.....");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void loadPersonAll(ObjectOutputStream objectOutputStream,OutputStream outputStream,ObjectInputStream objectInputStream) {
+		try {
+			System.out.println("******************** loadPersonAll Start ********************");
+			PersonDao personDao=new PersonDaoImpl();
+			DepartmentDao departmentDao=new DepartmentDaoImpl();
+			List<Person> list=personDao.showAllPerson();
+			int size=list.size();
+			outputStream.write((String.valueOf(size)+"\n").getBytes());
+			Department department;
+			for (Iterator<Person> iterator = list.iterator(); iterator.hasNext();) {
+				Person person=(Person)iterator.next();
+				department=departmentDao.loadDepartment(person.getdId());
+				
+				objectOutputStream.writeObject(person);
+				objectOutputStream.writeObject(department);
+			}
+			System.out.println("发送所有person结束....");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	private void loadAllPersonOfADepartment(ObjectOutputStream objectOutputStream,  OutputStream outputStream, ObjectInputStream objectinputStream, String value) {
 			Map<String, String> map= new HashMap<String,String>();
 			String[] values=value.split(":");
 			map.put(values[0], values[1]);
 			try {
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 				PersonDao personDao=new PersonDaoImpl();
 				List<Person> persons=personDao.showAllPersonOfADepartment(Integer.valueOf(map.get("dId")));
 				int size=persons.size();
@@ -101,44 +140,7 @@ public class OracleDaoServer extends Server {
 			}
 	}
 
-	private void loadDepartmentAll(OutputStream outputStream) {
-		try {
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-			DepartmentDao departmentDao=new DepartmentDaoImpl();
-			List<Department> list=departmentDao.showAllDepartment();
-			int size=list.size();
-			outputStream.write((String.valueOf(size)+"\n").getBytes());
-			for (Iterator<Department> iterator = list.iterator(); iterator.hasNext();) {
-				Department department = (Department) iterator.next();
-				objectOutputStream.writeObject(department);
-			}
-			System.out.println("发送所有department结束.....");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
-	private void loadPersonAll(OutputStream outputStream) {
-		try {
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-			PersonDao personDao=new PersonDaoImpl();
-			DepartmentDao departmentDao=new DepartmentDaoImpl();
-			List<Person> list=personDao.showAllPerson();
-			int size=list.size();
-			outputStream.write((String.valueOf(size)+"\n").getBytes());
-			Department department;
-			for (Iterator<Person> iterator = list.iterator(); iterator.hasNext();) {
-				Person person=(Person)iterator.next();
-				department=departmentDao.loadDepartment(person.getdId());
-				objectOutputStream.writeObject(person);
-				objectOutputStream.writeObject(department);
-			}
-			System.out.println("发送所有person结束....");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
 
 	private void removeDepartment(String value) {
 		Map<String, String> map= new HashMap<String,String>();
