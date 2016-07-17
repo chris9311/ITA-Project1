@@ -1,6 +1,7 @@
 package com.ita.server;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -68,10 +69,14 @@ public class OracleDaoServer extends Server {
 				}else if ("L-PD".equals(commands[0])) {   //查询一个department所有person的所有属性
 					loadAllPersonOfADepartment(objectOutputStream,outputStream,objectInputStream,commands[1]);
 				}else if ("Q".equals(commands[0])) {   //退出
+					SingletonOracleDaoServer.clientClose(socket);
 					break;
 				}
 			}
-		 }catch (IOException e) {
+		 }catch (EOFException e) {
+			// TODO: handle exception
+			 System.out.println("Client is closed");
+		}catch (IOException e) {
 			e.printStackTrace();
 		}finally{
 			

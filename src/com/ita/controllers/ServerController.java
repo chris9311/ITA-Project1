@@ -24,15 +24,16 @@ public class ServerController {
 	
 	public void changeStatus(Request request, Response response) {
 		String serverStatus = "";
-		if ( SingletonOracleDaoServer.isServerIsOpen() ) {			
+		if ( SingletonOracleDaoServer.isServerIsOpen() ) {
 			SingletonOracleDaoServer.stopServer();
+//			Thread.sleep(20);
 			serverStatus = "Start";
 		}else {
 			SingletonOracleDaoServer.startServer();
+//			Thread.sleep(20);
 			serverStatus = "Stop";
 		}
-		response.setAttribute("title", "Server Controller");
-		response.setAttribute("value", "You can start or stop Server with the button.");
-		response.sendString(serverStatus);
+		response.sendString(serverStatus + "," + SingletonOracleDaoServer.serverStartTime);
+
 	}
 }

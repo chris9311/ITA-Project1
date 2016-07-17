@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.ita.client.OracleDaoClient;
@@ -15,9 +16,9 @@ public class SingletonOracleDaoServer{
 	private static SingletonOracleDaoServer sos = new SingletonOracleDaoServer();
 	private static ServerSocket serverSocket;
 	private static boolean serverIsOpen = false;
-	private static List<OracleDaoClient> clientList = new ArrayList<OracleDaoClient>();
-	private static Thread thread;
-	
+	public static List<OracleDaoClient> clientList = new ArrayList<OracleDaoClient>();
+	public static Date serverStartTime;
+
 	public SingletonOracleDaoServer() {
 	}
 	
@@ -33,6 +34,7 @@ public class SingletonOracleDaoServer{
 		if(serverIsOpen){
 			try {
 				serverIsOpen = false;
+				clientList.clear();
 				serverSocket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -45,6 +47,7 @@ public class SingletonOracleDaoServer{
 		if(!serverIsOpen){
 			try {
 				serverSocket = new ServerSocket(8081);
+				serverStartTime = new Date();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -57,7 +60,7 @@ public class SingletonOracleDaoServer{
 						try {
 							Socket socket = serverSocket.accept();
 							new Thread(new OracleDaoServer(socket)).start();
-							clientList.add(new OracleDaoClient(socket.getInetAddress().toString(), new Date()));
+							clientList.add(new OracleDaoClient(socket.getInetAddress().toString(), new Date(), socket.hashCode()));
 						} catch (SocketException se) {
 							// TODO: handle exception
 							System.out.println(" ******************** Tcp Server is closed ********************");
@@ -75,5 +78,13 @@ public class SingletonOracleDaoServer{
 		return sos;
 	}
 	
+	public static void clientClose(Socket socket){
+		for (int i = 0; i < clientList.size(); i++) {
+			if(socket.hashCode() == clientList.get(i).getSocketHashCode()){
+				clientList.remove(i);
+				break;
+			}
+		}
+	}
 
 }

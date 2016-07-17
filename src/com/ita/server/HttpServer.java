@@ -1,14 +1,7 @@
 package com.ita.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.ita.routes.Router;
-import com.ita.util.HtmlUtil;
 
 public class HttpServer extends Server {
 

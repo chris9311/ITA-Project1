@@ -6,6 +6,7 @@ public class OracleDaoClient {
 	
 	private String host;
 	private Date startTime;
+	private int socketHashCode;
 	
 	public String getHost() {
 		return host;
@@ -23,12 +24,15 @@ public class OracleDaoClient {
 		this.startTime = startTime;
 	}
 
-	public OracleDaoClient(String host, Date startTime) {
+	public OracleDaoClient(String host, Date startTime, int socketHashCode) {
 		super();
 		this.host = host;
 		this.startTime = startTime;
+		this.socketHashCode = socketHashCode;
 	}
-	
-	
+
+	public int getSocketHashCode() {
+		return socketHashCode;
+	}
 
 }

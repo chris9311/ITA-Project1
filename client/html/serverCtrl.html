@@ -3,14 +3,25 @@
 <head>
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-<script>
+<script type="text/javascript">
 
 	function changeStatus() {		
 		$.ajax({ 
 			url: "/server/changeStatus", 
-			context: document.body, 
 			success: function(msg){
-				document.getElementById("serverCtrl").value = msg + " Server";
+				var Msg = msg.split(',');
+				console.log(Msg[0]);
+				var dom = document.getElementById("serverCtrl");
+				var dom2 = document.getElementById("serverStartTime");
+				var dom3 = document.getElementById("serverTimeParent");
+				dom.value = Msg[0] + " Server";
+				if(Msg[0] == "Start"){
+					if(dom3) {
+						dom3.removeChild(dom2);
+					}
+				}else{
+					dom3.innerHTML = "<div id='serverStartTime'>Server Start Time : " + Msg[1] + "</div>";
+				}
 			}
 		});
 	}
@@ -40,6 +51,9 @@
 </nav>
 <h1>Welcome!</h1>
 <h2>{{value}}</h2>
+<div id="serverTimeParent">
+	<div id = "serverStartTime"></div>
+</div>
 <input class="btn btn-default" id="serverCtrl" onclick="changeStatus()" value = "{{serverStatus}} Server">
 </div>
 </body>
