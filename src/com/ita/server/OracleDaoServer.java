@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,6 +77,9 @@ public class OracleDaoServer extends Server {
 		 }catch (EOFException e) {
 			// TODO: handle exception
 			 System.out.println("Client is closed");
+		}catch (SocketException e) {
+			// TODO: handle exception
+			System.out.println("******************** Oracle Server is closed ********************");
 		}catch (IOException e) {
 			e.printStackTrace();
 		}finally{
