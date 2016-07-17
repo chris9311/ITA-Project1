@@ -10,14 +10,14 @@ public class ServerStart {
 
 	public static void main(String[] args) throws IOException {
 
-		ServerSocket serverSocket = new ServerSocket(8088);
-//		ServerSocket serverSocker1 = new ServerSocket(8890);
+//		ServerSocket serverSocket = new ServerSocket(8088);
+		ServerSocket serverSocker1 = new ServerSocket(8890);
 		
 		while (true) {			
-			Socket socket = serverSocket.accept();
-			new Thread(new HttpServer(socket)).start();
-//			Socket socket1= serverSocker1.accept();
-//			new Thread(new OracleDaoServer(socket1)).start();
+//			Socket socket = serverSocket.accept();
+//			new Thread(new HttpServer(socket)).start();
+			Socket socket1= serverSocker1.accept();
+			new Thread(new OracleDaoServer(socket1)).start();
 		}
 	}
 
