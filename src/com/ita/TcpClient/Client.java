@@ -35,6 +35,12 @@ public class Client {
 		System.out.println("客户机启动.....");
 		while(true){
 			
+			try{
+				   socket.sendUrgentData(0xFF);
+				}catch(Exception e){
+				System.out.println("server is close");
+				}
+			
 			System.out.println("请输入指令：");
 			String command=readConsole.readLine();
 			
@@ -44,7 +50,9 @@ public class Client {
 				if(commands.length==2){
 					Command c=Command.getCommand(commands[0], commands[1]);
 					if(c.getFlag()){
-						outputStream.write((c.getCommand()+"\n").getBytes());		
+						outputStream.write((c.getCommand()+"\n").getBytes());
+						String reString=reader.readLine();
+						System.out.println(reString);
 					}else{
 						System.out.println("命令输入错误！");
 					}
@@ -55,7 +63,9 @@ public class Client {
 				if(commands.length==2){
 					Command c=Command.getCommand(commands[0], commands[1]);
 					if(c.getFlag()){
-						outputStream.write((c.getCommand()+"\n").getBytes());		
+						outputStream.write((c.getCommand()+"\n").getBytes());	
+						String reString=reader.readLine();
+						System.out.println(reString);
 					}else{
 						System.out.println("命令输入错误！");
 					}
@@ -67,6 +77,8 @@ public class Client {
 					Command c = Command.getCommand(commands[0], commands[1]);
 					if(c.getFlag()){										
 						outputStream.write((c.getCommand()+"\n").getBytes());
+						String reString=reader.readLine();
+						System.out.println(reString);
 					}else{
 						System.out.println("命令输入错误！");
 					}
@@ -77,7 +89,9 @@ public class Client {
 				if(commands.length==2){
 					Command c=Command.getCommand(commands[0], commands[1]);
 					if(c.getFlag()){
-						outputStream.write((c.getCommand()+"\n").getBytes());						
+						outputStream.write((c.getCommand()+"\n").getBytes());		
+						String reString=reader.readLine();
+						System.out.println(reString);
 					}else{
 						System.out.println("命令输入错误！");
 					}
@@ -88,7 +102,9 @@ public class Client {
 				if(commands.length==2){
 					Command c = Command.getCommand(commands[0], commands[1]);
 					if(c.getFlag()){
-						outputStream.write((c.getCommand()+"\n").getBytes());											
+						outputStream.write((c.getCommand()+"\n").getBytes());	
+						String reString=reader.readLine();
+						System.out.println(reString);
 					}else{
 						System.out.println("命令输入错误！");
 					}
@@ -100,6 +116,8 @@ public class Client {
 					Command c = Command.getCommand(commands[0], commands[1]);
 					if(c.getFlag()){										
 						outputStream.write((c.getCommand()+"\n").getBytes());
+						String reString=reader.readLine();
+						System.out.println(reString);
 					}else{
 						System.out.println("命令输入错误！");
 					}
@@ -110,14 +128,19 @@ public class Client {
 				if(commands.length==1){
 					outputStream.write((command+"\n").getBytes());
 					String sizeString=reader.readLine();
-					int size=Integer.valueOf(sizeString);
-					System.out.println(size);
-					for(int i=0;i<size;i++){
-						String pString=reader.readLine();
-						Person person=Person.stringToPerson(pString);
-						String dString=reader.readLine();
-						Department department=Department.stringToDepartment(dString);
-						System.out.println(person+" "+department);	
+					if(sizeString!=null){
+						int size=Integer.valueOf(sizeString);
+						for(int i=0;i<size;i++){
+							String pString=reader.readLine();
+							Person person=Person.stringToPerson(pString);
+							String dString=reader.readLine();
+							Department department=Department.stringToDepartment(dString);
+							System.out.println(person+" "+department);	
+						}
+						
+					}else{
+						System.out.println("服务器停止！");
+						break;
 					}
 				}else{
 					System.out.println("命令输入错误！");
@@ -126,12 +149,15 @@ public class Client {
 				if(commands.length==1){
 					outputStream.write((command+"\n").getBytes());
 					String sizeString=reader.readLine();
-					int size=Integer.valueOf(sizeString);
-					System.out.println(size);
-					for(int i=0;i<size;i++){
-						String dString=reader.readLine();
-						Department department=Department.stringToDepartment(dString);
-						System.out.println(department);
+					if(sizeString!=null){
+						int size=Integer.valueOf(sizeString);
+						for(int i=0;i<size;i++){
+							String dString=reader.readLine();
+							Department department=Department.stringToDepartment(dString);
+							System.out.println(department);
+						}						
+					}else{
+						System.out.println("服务器停止！");						
 					}
 				}else{
 					System.out.println("命令输入错误！");
@@ -142,12 +168,16 @@ public class Client {
 					if(c.getFlag()){
 						outputStream.write((c.getCommand()+"\n").getBytes());
 						String sizeString=reader.readLine();
-						int size=Integer.valueOf(sizeString);
-						for(int i=0;i<size;i++){
-							String pString=reader.readLine();
-							Person person=Person.stringToPerson(pString);
-							System.out.println(person);
-						}	
+						if(sizeString==null){
+							int size=Integer.valueOf(sizeString);
+							for(int i=0;i<size;i++){
+								String pString=reader.readLine();
+								Person person=Person.stringToPerson(pString);
+								System.out.println(person);
+							}								
+						}else{
+							System.out.println("服务器停止！");													
+						}
 					}else{
 						System.out.println("命令输入错误！");
 					}

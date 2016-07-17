@@ -51,17 +51,17 @@ public class OracleDaoServer extends Server {
 				String command=reader.readLine();
 				String[] commands=command.split(" ");
 				if("A-P".equals(commands[0])){          //新增person
-					addPerson(commands[1]);
+					addPerson(commands[1],outputStream);
 				}else if ("A-D".equals(commands[0])) {    //新增department
-					addDepartment(commands[1]);
+					addDepartment(commands[1],outputStream);
 				}else if ("U-P".equals(commands[0])) {    //更新person
-					updatePerson(commands[1]);
+					updatePerson(commands[1],outputStream);
 				}else if ("U-D".equals(commands[0])) {    //更新department
-					updateDepartment(commands[1]);
+					updateDepartment(commands[1],outputStream);
 				}else if ("D-P".equals(commands[0])) {   //删除指定id的person
-					removePerson(commands[1]);
+					removePerson(commands[1],outputStream);
 				}else if ("D-D".equals(commands[0])) {   //删除department以及其内的person
-					removeDepartment(commands[1]);
+					removeDepartment(commands[1],outputStream);
 				}else if ("L-PA".equals(commands[0])) {   //查询所有person的信息，除了departmentID
 					loadPersonAll(objectOutputStream,outputStream,objectInputStream);
 				}else if ("L-DA".equals(commands[0])) {   //查询所有department
@@ -74,7 +74,6 @@ public class OracleDaoServer extends Server {
 				}
 			}
 		 }catch (EOFException e) {
-			// TODO: handle exception
 			 System.out.println("Client is closed");
 		}catch (IOException e) {
 			e.printStackTrace();
@@ -147,7 +146,7 @@ public class OracleDaoServer extends Server {
 
 
 
-	private void removeDepartment(String value) {
+	private void removeDepartment(String value, OutputStream outputStream) {
 		Map<String, String> map= new HashMap<String,String>();
 		String[] values=value.split(":");
 		map.put(values[0], values[1]);
@@ -159,25 +158,49 @@ public class OracleDaoServer extends Server {
 		}
 		DepartmentDao departmentDao=new DepartmentDaoImpl();
 		int m=departmentDao.deleteDepartment(Integer.valueOf(map.get("dId")));
-		if(m==0)
+		if(m==0){
 			System.out.println("删除department失败.....");
-		else 
+			try {
+				outputStream.write(("Insert fail!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
+		else {
 			System.out.println("删除department成功.....");
+			try {
+				outputStream.write(("Insert success!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 
-	private void removePerson(String value) {
+	private void removePerson(String value, OutputStream outputStream) {
 		Map<String, String> map= new HashMap<String,String>();
 		String[] values=value.split(":");
 		map.put(values[0], values[1]);
 		PersonDao personDao=new PersonDaoImpl();
 		int m=personDao.deletePerson(Integer.valueOf(map.get("pId")));
-		if(m==0)
+		if(m==0){
 			System.out.println("删除person失败.....");
-		else 
+			try {
+				outputStream.write(("Insert fail!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
+		else {
 			System.out.println("删除person成功.....");
+			try {
+				outputStream.write(("Insert success!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 
-	private void updateDepartment(String value) {
+	private void updateDepartment(String value, OutputStream outputStream) {
 		Map<String, String> map= new HashMap<String,String>();
 		String[] values=value.split(",");
 		for (int i = 0; i < values.length; i++) {
@@ -188,13 +211,25 @@ public class OracleDaoServer extends Server {
 		department.setdId(Integer.valueOf(map.get("dId")));
 		DepartmentDao departmentDao=new DepartmentDaoImpl();
 		int m=departmentDao.updateDepartment(department);
-		if(m==0)
+		if(m==0){
 			System.out.println("更新department失败.....");
-		else 
+			try {
+				outputStream.write(("Insert fail!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
+		else {
 			System.out.println("更新department成功.....");
+			try {
+				outputStream.write(("Insert success!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 
-	private void updatePerson(String value) {
+	private void updatePerson(String value, OutputStream outputStream) {
 		Map<String, String> map= new HashMap<String,String>();
 		String[] values=value.split(",");
 		for (int i = 0; i < values.length; i++) {
@@ -213,16 +248,28 @@ public class OracleDaoServer extends Server {
 			person.setpId(Integer.valueOf(pId));
 			PersonDao personDao=new PersonDaoImpl();
 			int m=personDao.updatePerson(person);
-			if(m==0)
+			if(m==0){
 				System.out.println("更新person失败.....");
-			else 
+				try {
+					outputStream.write(("Insert fail!"+"\n").getBytes());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
+			}
+			else {
 				System.out.println("更新person成功.....");
+				try {
+					outputStream.write(("Insert success!"+"\n").getBytes());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void addPerson(String value) {
+	private void addPerson(String value, OutputStream outputStream) {
 		Map<String, String> map= new HashMap<String,String>();
 		String[] values=value.split(",");
 		for (int i = 0; i < values.length; i++) {
@@ -239,16 +286,28 @@ public class OracleDaoServer extends Server {
 					Integer.valueOf(map.get("dId")), Integer.valueOf(map.get("salary")));
 			PersonDao personDao=new PersonDaoImpl();
 			int m=personDao.addPerson(person);
-			if(m==0)
+			if(m==0){
 				System.out.println("插入新person失败.....");
-			else 
+				try {
+					outputStream.write(("Insert fail!"+"\n").getBytes());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
+			}
+			else {
 				System.out.println("插入新person成功.....");
+				try {
+					outputStream.write(("Insert success!"+"\n").getBytes());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void addDepartment(String value) {
+	private void addDepartment(String value, OutputStream outputStream) {
 		Map<String, String> map= new HashMap<String,String>();
 		String[] values=value.split(",");
 		for (int i = 0; i < values.length; i++) {
@@ -258,10 +317,22 @@ public class OracleDaoServer extends Server {
 		Department department=new Department(map.get("dName"), map.get("city"));
 		DepartmentDao departmentDao=new DepartmentDaoImpl();
 		int m=departmentDao.addDepartment(department);
-		if(m==0)
+		if(m==0){
 			System.out.println("插入新department失败.....");
-		else 
+			try {
+				outputStream.write(("Insert fail!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
+		else {
 			System.out.println("插入新department成功.....");
+			try {
+				outputStream.write(("Insert success!"+"\n").getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 
 	@Override
