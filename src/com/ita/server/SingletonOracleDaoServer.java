@@ -3,6 +3,7 @@ package com.ita.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,8 +32,8 @@ public class SingletonOracleDaoServer{
 	public static void stopServer() {
 		if(serverIsOpen){
 			try {
-				serverSocket.close();
 				serverIsOpen = false;
+				serverSocket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -49,7 +50,7 @@ public class SingletonOracleDaoServer{
 				e1.printStackTrace();
 			}
 			serverIsOpen = true;
-			thread = new Thread(){
+			new Thread(){
 				public void run() {
 					while (true) {
 						if( serverIsOpen!= true) break;
@@ -57,14 +58,16 @@ public class SingletonOracleDaoServer{
 							Socket socket = serverSocket.accept();
 							new Thread(new OracleDaoServer(socket)).start();
 							clientList.add(new OracleDaoClient(socket.getInetAddress().toString(), new Date()));
-						} catch (IOException e) {
+						} catch (SocketException se) {
+							// TODO: handle exception
+							System.out.println(" ******************** Tcp Server is closed ********************");
+						}catch (IOException e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							e.printStackTrace();							
 						}
 					}
 				};
-			};
-			thread.start();
+			}.start();
 		}
 	}
 

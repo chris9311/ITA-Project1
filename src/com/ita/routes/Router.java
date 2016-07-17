@@ -51,6 +51,7 @@ public class Router {
 		bufferedReader = new BufferedReader(inputStreamReader);
 		String line = null;
 		line = bufferedReader.readLine();
+		System.out.println(" ********** http request header : " + line);
 		if(line != null){			
 			String resource=line.substring(line.indexOf('/'),line.lastIndexOf('/')-5);
 			resource=URLDecoder.decode(resource, "UTF-8");
@@ -94,6 +95,8 @@ public class Router {
 			if(cm.contains(".")){				
 				methodName = cm.split("\\.")[1];
 				className = cm.split("\\.")[0];
+			}else {
+				className = cm;
 			}
 		}
 		cClass = Class.forName("com.ita.controllers." + className + "Controller");

@@ -46,6 +46,9 @@ public class Response {
 
 	public void sendHtml(String fileName){
 		try {
+			this.outputStream.write(this.header.getBytes());
+			this.outputStream.write(this.contentType.getBytes());
+			this.outputStream.write("\r\n".getBytes());
 			this.outputStream.write(HtmlUtil.readHtmlFile(fileName, this.attribute).getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -58,8 +61,23 @@ public class Response {
 		}
 	}
 	
-	public void sendJson() {
-		
+	public void sendString(String msg) {
+		try {
+			this.outputStream.write(this.header.getBytes());
+			this.outputStream.write(this.contentType.getBytes());
+			this.outputStream.write("\r\n".getBytes());
+			this.outputStream.write(msg.getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				this.outputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
