@@ -175,7 +175,7 @@ public class PersonDaoImpl implements PersonDao {
 	public List<Person> showAllPersonOfADepartment(int did) {
 		List<Person> ps = new ArrayList<Person>();
 
-		String sql = "select * from person join depart on person.did = depart.did ";
+		String sql = "select * from person left join depart on person.did = depart.did ";
 		Connection con = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -210,7 +210,7 @@ public class PersonDaoImpl implements PersonDao {
 	public Map<Person, Department> showPersonAndHisDepartment() {
 		Map<Person,Department> map = new HashMap<Person,Department>();
 
-		String sql = "select * from person join depart on person.did = depart.did ";
+		String sql = "select * from person left join depart on person.did = depart.did ";
 		Connection con = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;

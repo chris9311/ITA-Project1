@@ -96,7 +96,7 @@ public class OracleDaoServer extends Server {
 			outputStream.write((String.valueOf(size)+"\n").getBytes());
 			for (Iterator<Department> iterator = list.iterator(); iterator.hasNext();) {
 				Department department = (Department) iterator.next();
-				objectOutputStream.writeObject(department);
+				outputStream.write((department.toString()+"\n").getBytes());
 			}
 			System.out.println("发送所有department结束.....");
 		} catch (IOException e) {
@@ -113,8 +113,8 @@ public class OracleDaoServer extends Server {
 			System.out.println(size);
 			Set<Person> persons=map.keySet();
 			for (Person person : persons) {
-				objectOutputStream.writeObject(person);
-				objectOutputStream.writeObject(map.get(person));
+				outputStream.write((person.toString()+"\n").getBytes());
+				outputStream.write((map.get(person).toString()+"\n").getBytes());
 			}
 			System.out.println("发送所有person结束....");
 		} catch (IOException e) {
@@ -133,7 +133,7 @@ public class OracleDaoServer extends Server {
 				outputStream.write((String.valueOf(size)+"\n").getBytes());
 				for (Iterator<Person> iterator = persons.iterator(); iterator.hasNext();) {
 					Person person = (Person) iterator.next();
-					objectOutputStream.writeObject(person);
+					outputStream.write((person.toString()+"\n").getBytes());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
