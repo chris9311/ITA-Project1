@@ -34,6 +34,9 @@ public class SingletonOracleDaoServer{
 		if(serverIsOpen){
 			try {
 				serverIsOpen = false;
+				for (OracleDaoClient oracleDaoClient : clientList) {
+					oracleDaoClient.getSocket().close();
+				}
 				clientList.clear();
 				serverSocket.close();
 			} catch (IOException e) {
@@ -60,7 +63,7 @@ public class SingletonOracleDaoServer{
 						try {
 							Socket socket = serverSocket.accept();
 							new Thread(new OracleDaoServer(socket)).start();
-							clientList.add(new OracleDaoClient(socket.getInetAddress().toString(), new Date(), socket.hashCode()));
+							clientList.add(new OracleDaoClient(socket.getInetAddress().toString(), new Date(), socket.hashCode(), socket));
 						} catch (SocketException se) {
 							// TODO: handle exception
 							System.out.println(" ******************** Tcp Server is closed ********************");
@@ -81,6 +84,12 @@ public class SingletonOracleDaoServer{
 	public static void clientClose(Socket socket){
 		for (int i = 0; i < clientList.size(); i++) {
 			if(socket.hashCode() == clientList.get(i).getSocketHashCode()){
+				try {
+					clientList.get(i).getSocket().close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				clientList.remove(i);
 				break;
 			}

@@ -14,8 +14,10 @@ public class ServerController {
 		
 		if (SingletonOracleDaoServer.isServerIsOpen()) {			
 			response.setAttribute("serverStatus", "Stop");
+			response.setAttribute("startTime", "<div id='serverStartTime'>Server Start Time : " + SingletonOracleDaoServer.serverStartTime + "</div>");
 		}else {
 			response.setAttribute("serverStatus", "Start");
+			response.setAttribute("startTime", "");
 		}
 		response.setAttribute("title", "Server Controller");
 		response.setAttribute("value", "You can start or stop Server with the button.");

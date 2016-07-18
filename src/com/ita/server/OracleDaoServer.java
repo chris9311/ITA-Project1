@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import com.ita.oracledaoserver.operation.AddDepartment;
 import com.ita.oracledaoserver.operation.AddPerson;
@@ -74,6 +75,9 @@ public class OracleDaoServer extends Server {
 			}
 		 }catch (EOFException e) {
 			 System.out.println("Client is closed");
+		}catch (SocketException e) {
+			// TODO: handle exception
+			System.out.println("******************** Oracle Server is closed ********************");
 		}catch (IOException e) {
 			e.printStackTrace();
 		}finally{
